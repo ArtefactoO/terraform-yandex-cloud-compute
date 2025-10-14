@@ -1,0 +1,39 @@
+#cloud-config
+datasource:
+ Ec2:
+  strict_id: false
+ssh_pwauth: no
+users:
+- name: ${ssh_user}
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  ssh_authorized_keys:
+  - ${ssh_user_public_key}
+write_files:
+- content: |
+    network:
+      version: 2
+      ethernets:
+        eth0:
+          dhcp4: true
+        eth1:
+          dhcp4: true
+          dhcp4-overrides:
+            use-routes: false
+        eth2:
+          dhcp4: true
+          dhcp4-overrides:
+            use-routes: false
+        eth3:
+          dhcp4: true
+          dhcp4-overrides:
+            use-routes: false
+        eth4:
+          dhcp4: true
+          dhcp4-overrides:
+            use-routes: false
+  path: /etc/cloud/cloud.cfg.d/04_net.cfg
+  permissions: '0755'
+runcmd:
+  - sleep 5
+  - reboot
