@@ -33,6 +33,18 @@ This example demonstrates how to create virtual machines (VMs) in Yandex Cloud u
 After applying the configuration, you will get in outputs:
 - The IDs, internal IPs, zones, and NIC details for all created VMs
 
+
+## Terraform states examples
+
+```
+module.example_03.yandex_compute_disk.boot_disk["example-a-01"]
+module.example_03.yandex_compute_disk.boot_disk["example-b-02"]
+module.example_03.yandex_compute_disk.boot_disk["example-d-03"]
+module.example_03.yandex_compute_instance.main["example-a-01"]
+module.example_03.yandex_compute_instance.main["example-b-02"]
+module.example_03.yandex_compute_instance.main["example-d-03"]
+```
+
 ## How to Use
 
 1. Fill in all variable values in `terraform.tfvars`, especially:

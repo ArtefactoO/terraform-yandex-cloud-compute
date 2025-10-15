@@ -23,18 +23,6 @@ variable "ssh_user_public_key" {
   description = "Public SSH key used for key-based authentication to virtual machines."
 }
 
-variable "connected_folders" {
-  description = "List of connected folders with networks"
-  type = list(object({
-    folder_id = string
-    connected_networks = list(object({
-      zone                      = string
-      subnet_id                 = string
-      prefix                    = string
-    }))
-  }))
-}
-
 variable "additional_network_interfaces" {
   description = "Additional network interfaces for instances."
   type = map(list(object({

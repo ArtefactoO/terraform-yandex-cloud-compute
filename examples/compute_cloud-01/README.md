@@ -32,6 +32,17 @@ The file `_outputs.tf` shows a summary for each created VM using the module's `i
 - Internal and external IP addresses
 - Hardware specification, disks, and more
 
+## Terraform states examples
+
+```
+module.example_01.yandex_compute_disk.boot_disk["example-a-01"]
+module.example_01.yandex_compute_disk.boot_disk["example-b-02"]
+module.example_01.yandex_compute_disk.boot_disk["example-d-03"]
+module.example_01.yandex_compute_instance.main["example-a-01"]
+module.example_01.yandex_compute_instance.main["example-b-02"]
+module.example_01.yandex_compute_instance.main["example-d-03"]
+```
+
 ## How to Use
 
 1. Set correct values for all variables (in `terraform.tfvars` or as environment variables)

@@ -1,8 +1,6 @@
 # Yandex Cloud Compute (VM) Terraform Module
 
-A flexible Terraform module to **deploy and manage Virtual Machines (VMs)** in [Yandex Cloud], supporting simple to advanced scenarios: from a small VM group in one folder to **cross‑folder (interfolder) topologies** with multiple NICs and custom security groups.
-
-> This README describes the repository layout, variables, examples, and outputs, and gives copy‑paste‑ready snippets.
+A flexible Terraform module to **deploy and manage Virtual Machines (VMs)** in Yandex Cloud, from a small VM group in one folder to **interfolder topologies** with multiple NICs and custom security groups.
 
 ---
 
@@ -33,55 +31,53 @@ A flexible Terraform module to **deploy and manage Virtual Machines (VMs)** in [
 ├── examples/**/_example-01.tf                      # Example: basic VM group
 ├── examples/**/_example-02.tf                      # Example: additional data disks
 ├── examples/**/_example-03.tf                      # Example: interfolder with multiple NICs
-
 ```
-> Example READMEs and usage patterns in the examples mirror this structure.  See the per‑example notes in the repo. 
+> Examples mirror real-world topologies; open the example files for quick starts.
 
 ---
 
 ## 🚀 Quick Start
 
-1. **Set provider auth** (env vars or provider block).
-2. **Fill `terraform.tfvars` (or use env vars)**:
-   ```hcl
-   yc_cloud_id    = "<cloud-id>"
-   yc_folder_id   = "<folder-id>"
-   yc_region      = "ru-central1"
-   yc_environment = "dev"
-
-   ssh_user            = "ubuntu"
-   ssh_user_public_key = "ssh-ed25519 AAAA... user@host"
-   ```
+1. **Provider auth** (env vars or provider block).
+2. **Fill variables** (via `terraform.tfvars` or CLI):
+```hcl
+yc_cloud_id    = "<cloud-id>"
+yc_folder_id   = "<folder-id>"
+yc_region      = "ru-central1"
+yc_environment = "dev"
+ssh_user            = "ubuntu"
+ssh_user_public_key = "ssh-ed25519 AAAA... user@host"
+```
 3. **Declare instances** (minimal example):
-   ```hcl
-   module "vm_group" {
-     source               = "./"
-     ssh_user             = var.ssh_user
-     ssh_user_public_key  = var.ssh_user_public_key
-     environment          = var.yc_environment
+```hcl
+module "vm_group" {
+  source              = "./"
+  ssh_user            = var.ssh_user
+  ssh_user_public_key = var.ssh_user_public_key
+  environment         = var.yc_environment
 
-     instances = {
-       example-a-01 = {
-         zone      = "ru-central1-a"
-         subnet_id = "<subnet-id-a>"
-         cpu       = "2"
-         memory    = "4"
-         disk_size = "20"
-       }
-     }
-   }
-   ```
+  instances = {
+    example-a-01 = {
+      zone      = "ru-central1-a"
+      subnet_id = "<subnet-id-a>"
+      cpu       = "2"
+      memory    = "4"
+      disk_size = "20"
+    }
+  }
+}
+```
 4. **Run**:
-   ```bash
-   terraform init
-   terraform apply
-   ```
+```bash
+terraform init
+terraform apply
+```
 
 ---
 
 ## ⚙️ Inputs (Variables)
 
-> All descriptions are concise B2‑level English. Defaults apply unless you override per instance.
+> Plain B2 English; defaults apply unless you override per instance.
 
 ### General
 | Variable | Type | Default | Description |
@@ -120,24 +116,24 @@ A flexible Terraform module to **deploy and manage Virtual Machines (VMs)** in [
 | `instances_defaults` | object | see defaults | Default values applied to all VMs unless overridden in `instances`.|
 
 **`instances_defaults` fields (common defaults):**
-- `zone` *(string)* — default availability zone, e.g., `ru-central1-a`  
-- `platform_id` *(string)* — compute platform, e.g., `standard-v3`  
-- `cpu` *(string)* — vCPU count (string for flexible parsing), e.g., `"2"`  
-- `cpu_fraction` *(string)* — CPU performance percent, e.g., `"100"`  
-- `memory` *(string)* — RAM in GB, e.g., `"4"`  
-- `gpus` *(string\|null)* — optional GPU count/type  
-- `disk_size` *(string)* — boot disk size in GB  
-- `disk_type` *(string)* — boot disk type, e.g., `network-ssd`  
-- `disk_image` *(string)* — image ID for boot disk  
-- `snapshot_id` *(string\|null)* — boot disk snapshot ID (mutually exclusive with `disk_image`)  
-- `is_public` *(bool)* — attach public IP to primary NIC  
-- `disk_auto_delete` *(bool)* — auto delete boot disk with VM  
-- `ipv4` *(bool)* — enable IPv4 on primary NIC  
-- `ipv6` *(bool)* — enable IPv6 on primary NIC  
-- `serial_port_enable` *(number)* — serial console enable (0/1)  
-- `dns_record_type` *(string)* — `A`/`AAAA` when DNS enabled  
-- `dns_record_ttl` *(string)* — TTL seconds, e.g., `"300"`  
-- `secondary_disk_size` *(string)* — default extra disk size in GB  
+- `zone` *(string)* — default availability zone, e.g., `ru-central1-a`
+- `platform_id` *(string)* — compute platform, e.g., `standard-v3`
+- `cpu` *(string)* — vCPU count (string for flexible parsing), e.g., `"2"`
+- `cpu_fraction` *(string)* — CPU performance percent, e.g., `"100"`
+- `memory` *(string)* — RAM in GB, e.g., `"4"`
+- `gpus` *(string\|null)* — optional GPU count/type
+- `disk_size` *(string)* — boot disk size in GB
+- `disk_type` *(string)* — boot disk type, e.g., `network-ssd`
+- `disk_image` *(string)* — image ID for boot disk
+- `snapshot_id` *(string\|null)* — boot disk snapshot ID (mutually exclusive with `disk_image`)
+- `is_public` *(bool)* — attach public IP to primary NIC
+- `disk_auto_delete` *(bool)* — auto delete boot disk with VM
+- `ipv4` *(bool)* — enable IPv4 on primary NIC
+- `ipv6` *(bool)* — enable IPv6 on primary NIC
+- `serial_port_enable` *(number)* — serial console enable (0/1)
+- `dns_record_type` *(string)* — `A`/`AAAA` when DNS enabled
+- `dns_record_ttl` *(string)* — TTL seconds, e.g., `"300"`
+- `secondary_disk_size` *(string)* — default extra disk size in GB
 - `secondary_disk_type` *(string)* — default extra disk type
 
 **Per‑instance overrides** may include:
@@ -149,39 +145,19 @@ A flexible Terraform module to **deploy and manage Virtual Machines (VMs)** in [
 - Labels/metadata: `labels`, custom metadata
 
 > **Tips**
-> - IPs must belong to the **CIDR** of the selected subnet.  
-> - `index` for additional NICs must be unique per instance (1,2,3 …).  
+> - IPs must belong to the **CIDR** of the selected subnet.
+> - `index` for additional NICs must be unique per instance (1,2,3 …).
 > - For interfolder, make sure referenced subnets/SGs are accessible from the target folder/project.
-
----
-
-## 🔌 Interfolder (Cross‑Folder) Networks
-
-Pass a helper structure like `connected_folders` in your root config to document or compute which subnets/SGs correspond to which zones. Example `terraform.tfvars` excerpt:
-
-```hcl
-connected_folders = [
-  {
-    folder_id = "<folder-id-1>"
-    connected_networks = [
-      { zone = "${yc_region}-a", subnet_id = "<subnet-id-a1>", prefix = "10.10.10.0/24" },
-      { zone = "${yc_region}-b", subnet_id = "<subnet-id-b1>", prefix = "10.10.11.0/24" },
-      { zone = "${yc_region}-d", subnet_id = "<subnet-id-d1>", prefix = "10.10.12.0/24" }
-    ]
-  }
-]
-```
-> `prefix` is a **CIDR** (e.g., `10.10.10.0/24`). Use unique IPs per NIC that fall into their CIDRs.
 
 ---
 
 ## 📦 Examples
 
-- **Basic group** — three VMs in different zones within one folder.  
-- **With extra data disks** — attach multiple additional disks per VM.  
-- **Interfolder with multiple NICs** — NICs from subnets and folders different from the VM’s folder.
+- **Basic group** — three VMs in different zones within one folder (`_example-01.tf`).
+- **With extra data disks** — attach multiple additional disks per VM (`_example-02.tf`).
+- **Interfolder with multiple NICs** — NICs from subnets and folders different from the VM’s folder (`_example-03.tf`).
 
-Each example includes a minimal `main.tf`, per‑VM overrides, and a small `_outputs.tf` to print a summary.
+Each example is self‑contained and ready to `terraform init && terraform apply` after you fill variables.
 
 ---
 
@@ -202,6 +178,17 @@ output "instances_summary" {
 
 ---
 
+## 🧰 Troubleshooting & Gotchas
+
+- **Multiple data disks order** — when attaching multiple additional data disks, their attachment order is **not guaranteed** (it may be random). Do not rely on device indices/names (e.g., `/dev/vdb`, `/dev/vdc`); instead use disk labels/names, filesystem UUIDs, or udev rules.  
+  **Workaround:** if you must control the attachment sequence, create disks in **separate Terraform applies** (e.g., add disk #1 → `apply`, then add disk #2 → `apply`, then disk #3 → `apply`).
+- **Duplicate NIC index** — `index` must be unique per VM.
+- **Wrong zone/subnet pair** — subnet’s zone must match the VM zone.
+- **Interfolder SGs** — use security group IDs from the *same* folder as the respective interface.
+- **`disk_image` vs `snapshot_id`** — use only one for the boot disk.
+
+---
+
 ## ✅ Requirements
 
 - Terraform `>= 1.5.7`
@@ -210,18 +197,38 @@ output "instances_summary" {
 
 ---
 
-## 🧰 Troubleshooting & Gotchas
+## 🧩 Importing existing resources into Terraform state
 
-- **IPs outside subnet** → ensure `internal_ip_address` ∈ `prefix` (CIDR).  
-- **Duplicate NIC index** → `index` must be unique per VM.  
-- **Wrong zone/subnet pair** → subnet’s zone must match VM zone.  
-- **Interfolder SGs** → use SG IDs from the *same* folder as the interface.  
-- **`disk_image` vs `snapshot_id`** → use only one for the boot disk.
-- **Multiple data disks order** — when attaching multiple additional data disks, their attachment order is **not guaranteed** (it may be random). Do not rely on device indices/names (e.g., `/dev/vdb`, `/dev/vdc`); instead use disk labels/names, filesystem UUIDs, or udev rules.  
-  **Workaround:** if you must control the attachment sequence, create disks in **separate Terraform applies** (e.g., add disk #1 → `apply`, then add disk #1 + #2 → `apply`, then disk #1 + #2 + #3 → `apply`). This enforces the order by creation steps.
+You can adopt already-created Yandex Cloud resources into this module’s state with `terraform import`.
+
+> **Important:**
+> - The `for_each` address uses the **exact key** from your `instances` map. Make sure the VM name in `instances` equals the real VM name (or use a stable key you control).
+
+#### Current compute
+```
+terraform import 'module.example_01.yandex_compute_instance.main["example-a-01"]' <INSTANCE_ID>
+```
+
+#### Current boot disk
+```
+terraform import 'module.example_01.yandex_compute_disk.boot_disk["example-a-01"]' <DISK_ID>
+```
+
+#### Current secondary disk
+```
+terraform import 'module.example_01.yandex_compute_disk.secondary_disk["example-a-01-journal"]' <DISK_ID>
+
+terraform import 'module.example_01.yandex_compute_disk.secondary_disk["example-a-01-data"]' <DISK_ID>
+```
 
 ---
 
 ## 🤝 Contributing
 
 Issues and PRs are welcome: typo fixes, features, validations, docs, examples.
+
+---
+
+## 📄 License
+
+MIT
