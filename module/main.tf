@@ -11,6 +11,29 @@ locals {
   }
 }
 
+locals {
+  netplan_string = {
+    for name, inst in var.instances :
+    name => join("\n", concat(
+      [
+        "network:",
+        "  version: 2",
+        "  ethernets:",
+        "    eth0:",
+        "      dhcp4: true"
+      ],
+      flatten([
+        for nic in lookup(inst, "additional_network_interfaces", []) : [
+          format("    eth%d:", nic.index),
+          "      dhcp4: true",
+          "      dhcp4-overrides:",
+          "        use-routes: false"
+        ]
+      ])
+    ))
+  }
+}
+
 resource "yandex_compute_instance" "main" {
   for_each = var.instances
 
@@ -20,7 +43,7 @@ resource "yandex_compute_instance" "main" {
   zone                      = lookup(each.value, "zone", var.instances_defaults.zone)
   description               = lookup(each.value, "description", null)
   service_account_id        = try(each.value.service_account_id, null)
-  allow_stopping_for_update = true
+  allow_stopping_for_update = try(var.allow_stopping_for_update, true)
 
   labels = local.instance_labels[each.key]
 
@@ -82,6 +105,7 @@ resource "yandex_compute_instance" "main" {
     user-data = templatefile("${path.module}/templates/interfolder-cloud-init.yml", {
       ssh_user            = var.ssh_user
       ssh_user_public_key = var.ssh_user_public_key
+      netplan_yaml        = local.netplan_string[each.key]
     })
     } : {
     ssh-keys           = "${var.ssh_user}:${var.ssh_user_public_key}"

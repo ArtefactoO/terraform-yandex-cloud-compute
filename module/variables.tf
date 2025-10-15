@@ -77,6 +77,12 @@ variable "network_acceleration_type" {
   }
 }
 
+variable "allow_stopping_for_update" {
+  description = "If true, Terraform is allowed to stop the virtual machine when applying updates that require a restart (for example, changes to CPU, memory, or disk configuration)"
+  type        = string
+  default     = true
+}
+
 variable "labels" {
   description = "Set of key/value label."
   type        = map(string)

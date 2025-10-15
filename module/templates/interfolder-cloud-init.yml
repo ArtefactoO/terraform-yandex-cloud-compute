@@ -11,27 +11,7 @@ users:
   - ${ssh_user_public_key}
 write_files:
 - content: |
-    network:
-      version: 2
-      ethernets:
-        eth0:
-          dhcp4: true
-        eth1:
-          dhcp4: true
-          dhcp4-overrides:
-            use-routes: false
-        eth2:
-          dhcp4: true
-          dhcp4-overrides:
-            use-routes: false
-        eth3:
-          dhcp4: true
-          dhcp4-overrides:
-            use-routes: false
-        eth4:
-          dhcp4: true
-          dhcp4-overrides:
-            use-routes: false
+    ${indent(4, netplan_yaml)}
   path: /etc/cloud/cloud.cfg.d/04_net.cfg
   permissions: '0755'
 runcmd:
