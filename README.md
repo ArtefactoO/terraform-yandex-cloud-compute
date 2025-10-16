@@ -6,34 +6,12 @@ It also supports custom DNS records and flexible network configurations for comp
 
 ---
 
-## Features
+## Requirements
 
-- **Batch VM provisioning** — create many VMs in one run with per‑VM overrides.
-- **Per‑VM resources** — set vCPU / RAM / platform / zone / labels per instance.
-- **Boot & extra data disks** — size, type, auto‑delete; multiple data disks supported.
-- **Multiple network interfaces** — attach NICs from different subnets/folders.
-- **Security groups** — set defaults or per‑interface groups.
-- **Interfolder mode** — `is_interfolder = true` to use networks/SGs from other folders; automatically switches to the interfolder [`cloud-init`](/module/templates/interfolder-cloud-init.yml) template. 
-- **DNS records (optional)** — create A/AAAA records for internal or NAT addresses.
-- **Consistent metadata/labels** — unified labels for operations and automation.
-- **Rich outputs** — per‑VM summary with IDs, IPs, disks, and more.
-
----
-
-## Repository Structure
-
-```
-.
-├── module/main.tf                                  # Module logic
-├── module/variables.tf                             # Inputs (with types, defaults, validation)
-├── module/outputs.tf                               # Module outputs
-├── module/versions.tf                              # Terraform/provider constraints
-├── module/templates/default-cloud-init.yml         # cloud-init template (single-folder VMs)
-├── module/templates/interfolder-cloud-init.yml     # cloud-init template (interfolder use)
-├── examples/**/_example-01.tf                      # Example: basic VM group
-├── examples/**/_example-02.tf                      # Example: additional data disks
-├── examples/**/_example-03.tf                      # Example: interfolder with multiple NICs
-```
+- Terraform `>= 1.5.7`
+- Provider `yandex-cloud/yandex >= 0.150`
+- [Yandex CLI](https://yandex.cloud/en/docs/cli/quickstart)
+- IAM permissions to create compute/network/DNS resources
 
 ---
 
@@ -70,6 +48,38 @@ module "vm_group" {
     }
   }
 }
+
+---
+
+## Features
+
+- **Batch VM provisioning** — create many VMs in one run with per‑VM overrides.
+- **Per‑VM resources** — set vCPU / RAM / platform / zone / labels per instance.
+- **Boot & extra data disks** — size, type, auto‑delete; multiple data disks supported.
+- **Multiple network interfaces** — attach NICs from different subnets/folders.
+- **Security groups** — set defaults or per‑interface groups.
+- **Interfolder mode** — `is_interfolder = true` to use networks/SGs from other folders; automatically switches to the interfolder [`cloud-init`](/module/templates/interfolder-cloud-init.yml) template. 
+- **DNS records (optional)** — create A/AAAA records for internal or NAT addresses.
+- **Consistent metadata/labels** — unified labels for operations and automation.
+- **Rich outputs** — per‑VM summary with IDs, IPs, disks, and more.
+
+---
+
+## Repository Structure
+
+```
+.
+├── module/main.tf                                  # Module logic
+├── module/variables.tf                             # Inputs (with types, defaults, validation)
+├── module/outputs.tf                               # Module outputs
+├── module/versions.tf                              # Terraform/provider constraints
+├── module/templates/default-cloud-init.yml         # cloud-init template (single-folder VMs)
+├── module/templates/interfolder-cloud-init.yml     # cloud-init template (interfolder use)
+├── examples/**/_example-01.tf                      # Example: basic VM group
+├── examples/**/_example-02.tf                      # Example: additional data disks
+├── examples/**/_example-03.tf                      # Example: interfolder with multiple NICs
+```
+
 ```
 > More examples can be found in the examples/ directory.
 
@@ -166,15 +176,6 @@ output "instances_summary" {
 - **Wrong zone/subnet pair** — subnet’s zone must match the VM zone.
 - **Interfolder SGs** — use security group IDs from the *same* folder as the respective interface.
 - **`disk_image` vs `snapshot_id`** — use only one for the boot disk.
-
----
-
-## Requirements
-
-- Terraform `>= 1.5.7`
-- Provider `yandex-cloud/yandex >= 0.150`
-- [Yandex CLI](https://yandex.cloud/en/docs/cli/quickstart)
-- IAM permissions to create compute/network/DNS resources
 
 ---
 
