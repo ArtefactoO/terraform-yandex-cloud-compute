@@ -32,7 +32,7 @@ ssh_user_public_key = "ssh-ed25519 AAAA... user@host"
 
 3. **Declare instances** (minimal example):
 ```hcl
-module "vm_group" {
+module "example" {
   source              = "./"
   ssh_user            = var.ssh_user
   ssh_user_public_key = var.ssh_user_public_key
@@ -48,7 +48,14 @@ module "vm_group" {
     }
   }
 }
+```
+> More examples can be found in the examples/ directory.
 
+4. **Run**:
+```bash
+terraform init
+terraform apply
+```
 ---
 
 ## Features
@@ -79,21 +86,11 @@ module "vm_group" {
 ├── examples/**/_example-02.tf                      # Example: additional data disks
 ├── examples/**/_example-03.tf                      # Example: interfolder with multiple NICs
 ```
-
-```
-> More examples can be found in the examples/ directory.
-
-4. **Run**:
-```bash
-terraform init
-terraform apply
-```
-
 ---
 
 ## Inputs (Variables)
 
-> Plain B2 English; defaults apply unless you override per instance.
+> Defaults apply unless you override per instance.
 
 ### General
 | Variable | Type | Default | Description |
